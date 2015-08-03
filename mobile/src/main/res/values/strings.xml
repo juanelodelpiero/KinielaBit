@@ -3,4 +3,15 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="hint_username">Apodo</string>
+    <string name="hint_password">Contraseña</string>
+    
+    
+    <string name="str_signup">Registro a KinielaBit</string>
+    <string name="confirm_phone">Confirma tu celular</string>
+    <string name="hint_confirm_phone">Celular</string>
+    <string name="btn_singup">Registrar</string>
+    <string name="btn_login">Iniciar sesion</string>
+    <string name="str_join_to_group">Unete a un grupo</string>
+    <string name="title_activity_game">Game</string>
 </resources>
