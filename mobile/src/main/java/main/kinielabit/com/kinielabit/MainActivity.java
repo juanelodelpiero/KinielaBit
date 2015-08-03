@@ -1,6 +1,9 @@
 package main.kinielabit.com.kinielabit;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +15,7 @@ import android.widget.EditText;
 
 import com.google.gson.Gson;
 
+import main.kinielabit.com.kinielabit.main.kinielabit.com.database.DBHelper;
 import main.kinielabit.com.kinielabit.main.kinielabit.com.game.Game;
 import main.kinielabit.com.kinielabit.main.kinielabit.com.kinielabit.beans.UsuarioBeans;
 import main.kinielabit.com.kinielabit.main.kinielabit.com.task.GenericTaskFragment;
@@ -58,6 +62,29 @@ public class MainActivity extends AppCompatActivity implements GenericTaskFragme
             }
         }
     };
+
+
+    private void isLogin(){
+        String key = "IS_LOGIN";
+        SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        boolean isLogin = sharedPreferences.getBoolean(key, false);
+
+        if (!isLogin){
+
+            editor.putBoolean(key,true);
+            editor.commit();
+        }
+
+    }
+
+    private void openDataBase(){
+        DBHelper dbHelper = new DBHelper(this);
+        dbHelper.getWritableDatabase();
+
+
+    }
 
 
     @Override
