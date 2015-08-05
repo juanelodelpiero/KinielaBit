@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -140,7 +141,7 @@ public class GenericTaskFragment extends Fragment {
                 }
                 is.close();
                 String json = sb.toString();
-
+                Log.d(GenericTaskFragment.class.getSimpleName(), "Respuesta: "+ (json == null ? "Sin json" : json));
 
 
                 return json;

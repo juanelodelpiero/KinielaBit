@@ -1,5 +1,6 @@
 package main.kinielabit.com.kinielabit;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,21 +9,28 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import main.kinielabit.com.kinielabit.main.kinielabit.com.database.DBHelper;
+import main.kinielabit.com.kinielabit.main.kinielabit.com.database.tables.Usuario;
 import main.kinielabit.com.kinielabit.main.kinielabit.com.game.Game;
 import main.kinielabit.com.kinielabit.main.kinielabit.com.kinielabit.beans.UsuarioBeans;
 import main.kinielabit.com.kinielabit.main.kinielabit.com.task.GenericTaskFragment;
 
 public class MainActivity extends AppCompatActivity implements GenericTaskFragment.TaskCallBacks {
 
-    GenericTaskFragment taskFragment;
+    private GenericTaskFragment taskFragment;
+    private DBHelper dbHelper = null;
+    private SQLiteDatabase dataBase = null;
+
+    private final String key = "IS_LOGIN";
 
 
     @Override
@@ -43,6 +51,13 @@ public class MainActivity extends AppCompatActivity implements GenericTaskFragme
             taskFragment = new GenericTaskFragment();
             fm.beginTransaction().add(taskFragment, GenericTaskFragment.TAG_TASK_FRAGMENT).commit();
         }
+
+        if(isLogin()){
+            Intent intent = new Intent(this, Game.class);
+            startActivity(intent);
+            this.finish();
+        }
+
     }
 
     View.OnClickListener signUp = new View.OnClickListener() {
@@ -64,28 +79,53 @@ public class MainActivity extends AppCompatActivity implements GenericTaskFragme
     };
 
 
-    private void isLogin(){
-        String key = "IS_LOGIN";
+    private boolean isLogin(){
         SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         boolean isLogin = sharedPreferences.getBoolean(key, false);
 
-        if (!isLogin){
-
-            editor.putBoolean(key,true);
-            editor.commit();
-        }
+        return isLogin;
 
     }
 
     private void openDataBase(){
-        DBHelper dbHelper = new DBHelper(this);
-        dbHelper.getWritableDatabase();
+        if (dbHelper == null){
+            dbHelper = new DBHelper(this);
+            dataBase = dbHelper.getWritableDatabase();
 
-
+        }
     }
 
+    private void saveInDataBase(UsuarioBeans usuarioBeans){
+        openDataBase();
+
+        ContentValues cv = new ContentValues();
+        cv.put(Usuario.USERNAME, usuarioBeans.getUsername());
+        cv.put(Usuario.CELULAR, usuarioBeans.getCelular());
+        cv.put(Usuario.ID_USUARIO, usuarioBeans.getIdusuarios());
+        Long i = dataBase.insert(Usuario.TAB_NAME,Usuario.NOMBRE,cv);
+
+
+        if (i > 0){
+            SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(key,true);
+            editor.commit();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (dbHelper != null){
+            dbHelper.close();
+        }
+
+        if (dataBase != null){
+            dataBase.close();
+        }
+        super.onDestroy();
+    }
 
     @Override
     public void onPreExcute() {
@@ -104,8 +144,27 @@ public class MainActivity extends AppCompatActivity implements GenericTaskFragme
 
     @Override
     public void onPostExcute(String result) {
-        Intent intent = new Intent(this, Game.class);
-        startActivity(intent);
-        this.finish();
+        Log.d(MainActivity.class.getSimpleName(), result);
+        try {
+
+            Gson gson = new Gson();
+            UsuarioBeans usuarioBeans = gson.fromJson(result, UsuarioBeans.class);
+
+            saveInDataBase(usuarioBeans);
+
+            Intent intent = new Intent(this, Game.class);
+            startActivity(intent);
+            this.finish();
+
+        }catch (JsonSyntaxException ex){
+            ex.printStackTrace();
+
+        }
+
+
+
+
+
+
     }
 }

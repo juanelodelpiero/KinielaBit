@@ -15,8 +15,18 @@ public class UsuarioBeans {
     String puntos;
     String celular;
     String password;
+    Integer idusuarios;
+
 
     public UsuarioBeans() {
+    }
+
+    public Integer getIdusuarios() {
+        return idusuarios;
+    }
+
+    public void setIdusuarios(Integer idusuarios) {
+        this.idusuarios = idusuarios;
     }
 
     public String getUsername() {
