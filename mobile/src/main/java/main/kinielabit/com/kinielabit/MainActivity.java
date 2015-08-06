@@ -13,7 +13,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -31,7 +33,8 @@ public class MainActivity extends AppCompatActivity implements GenericTaskFragme
     private SQLiteDatabase dataBase = null;
 
     private final String key = "IS_LOGIN";
-
+    private final String ISSHOWPROGRESS = "isShowProgress";
+    private boolean isShowProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,19 +63,35 @@ public class MainActivity extends AppCompatActivity implements GenericTaskFragme
 
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(ISSHOWPROGRESS, isShowProgress);
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        if (savedInstanceState.getBoolean(ISSHOWPROGRESS)){
+            showProgress(true);
+        }
+    }
+
     View.OnClickListener signUp = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
 
             if (!taskFragment.isRunning()) {
-
+                hideKeyBoard(findViewById(R.));
                 UsuarioBeans usuario = new UsuarioBeans();
                 usuario.setUsername(((EditText) findViewById(R.id.username)).getText().toString());
                 usuario.setPassword(((EditText) findViewById(R.id.password)).getText().toString());
                 usuario.setCelular(((EditText) findViewById(R.id.phone)).getText().toString());
 
                 Gson gson = new Gson();
-                taskFragment.setData("http://192.168.43.242:8080/KinielaWS/webresources/usuario/registroMovil", "PUT", gson.toJson(usuario));
+                taskFragment.setData("http://192.168.2.2:8080/KinielaWS/webresources/usuario/registroMovil", "PUT", gson.toJson(usuario));
                 taskFragment.start();
             }
         }
@@ -115,6 +134,24 @@ public class MainActivity extends AppCompatActivity implements GenericTaskFragme
         }
     }
 
+    private void showProgress(final boolean show) {
+        findViewById(R.id.search_status_).setVisibility(
+                show ? View.VISIBLE : View.GONE);
+        if (findViewById(R.id.signup) != null) {
+            ( findViewById(R.id.signup)).setVisibility(show ? View.GONE
+                    : View.VISIBLE);
+
+        }
+        isShowProgress = show;
+    }
+
+    private void hideKeyBoard(TextView textView){
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
+
+
+    }
+
     @Override
     protected void onDestroy() {
         if (dbHelper != null){
@@ -129,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements GenericTaskFragme
 
     @Override
     public void onPreExcute() {
-
+        showProgress(true);
     }
 
     @Override
@@ -144,7 +181,6 @@ public class MainActivity extends AppCompatActivity implements GenericTaskFragme
 
     @Override
     public void onPostExcute(String result) {
-        Log.d(MainActivity.class.getSimpleName(), result);
         try {
 
             Gson gson = new Gson();
@@ -159,12 +195,8 @@ public class MainActivity extends AppCompatActivity implements GenericTaskFragme
         }catch (JsonSyntaxException ex){
             ex.printStackTrace();
 
+        }finally {
+            showProgress(false);
         }
-
-
-
-
-
-
     }
 }
