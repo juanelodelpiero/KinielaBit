@@ -1,6 +1,8 @@
 package main.kinielabit.com.kinielabit.main.kinielabit.com.game;
 
+import android.net.Uri;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -8,8 +10,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import main.kinielabit.com.kinielabit.R;
+import main.kinielabit.com.kinielabit.main.kinielabit.com.game.kiniela.KinielaFragment;
 
-public class Game extends AppCompatActivity {
+public class Game extends AppCompatActivity implements KinielaFragment.OnFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,10 +23,15 @@ public class Game extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitle(R.string.str_signup);
 
+        ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
+        viewPager.setAdapter(new GamePagerAdapter(getSupportFragmentManager(), this));
+
+
         TabLayout tab = (TabLayout) findViewById(R.id.tabs);
-        tab.addTab(tab.newTab().setText("KinielaBit"));
-        tab.addTab(tab.newTab().setText("Grupos"));
-        tab.addTab(tab.newTab().setText("Mi posicion"));
+        tab.setupWithViewPager(viewPager);
+      //  tab.addTab(tab.newTab().setText("KinielaBit"));
+       // tab.addTab(tab.newTab().setText("Grupos"));
+       // tab.addTab(tab.newTab().setText("Mi posicion"));
 
     }
 
@@ -47,5 +55,10 @@ public class Game extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }

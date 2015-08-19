@@ -1,0 +1,73 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="main.kinielabit.com.kinielabit.main.kinielabit.com.game.kiniela.KinielaFragment"
+    >
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+
+        <!-- A CardView that contains a TextView -->
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="16dp"
+            card_view:cardCornerRadius="4dp"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:padding="8dp"
+                    android:text="Jornada 3"
+                    android:background="#FF5722"
+                    android:autoText="false"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:gravity="center_vertical" />
+
+
+                    <LinearLayout
+                        android:id="@+id/linear_matchs"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <include layout="@layout/match" />
+                        <include layout="@layout/match" />
+                        <include layout="@layout/match" />
+                        <include layout="@layout/match" />
+                        <include layout="@layout/match" />
+                        <include layout="@layout/match" />
+                        <include layout="@layout/match" />
+                        <include layout="@layout/match" />
+                        <include layout="@layout/match" />
+                        <include layout="@layout/match" />
+
+
+                    </LinearLayout>
+
+
+            </LinearLayout>
+
+
+
+        </android.support.v7.widget.CardView>
+
+    </ScrollView>
+
+
+
+</FrameLayout>

@@ -84,14 +84,14 @@ public class MainActivity extends AppCompatActivity implements GenericTaskFragme
         public void onClick(View v) {
 
             if (!taskFragment.isRunning()) {
-                hideKeyBoard(findViewById(R.));
+                hideKeyBoard((TextView) findViewById(R.id.username));
                 UsuarioBeans usuario = new UsuarioBeans();
                 usuario.setUsername(((EditText) findViewById(R.id.username)).getText().toString());
                 usuario.setPassword(((EditText) findViewById(R.id.password)).getText().toString());
                 usuario.setCelular(((EditText) findViewById(R.id.phone)).getText().toString());
 
                 Gson gson = new Gson();
-                taskFragment.setData("http://192.168.2.2:8080/KinielaWS/webresources/usuario/registroMovil", "PUT", gson.toJson(usuario));
+                taskFragment.setData("http://192.168.50.150:8080/KinielaWS/webresources/usuario/registroMovil", "PUT", gson.toJson(usuario));
                 taskFragment.start();
             }
         }
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements GenericTaskFragme
         }
     }
 
-    private void saveInDataBase(UsuarioBeans usuarioBeans){
+    private boolean saveInDataBase(UsuarioBeans usuarioBeans){
         openDataBase();
 
         ContentValues cv = new ContentValues();
@@ -131,7 +131,11 @@ public class MainActivity extends AppCompatActivity implements GenericTaskFragme
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean(key,true);
             editor.commit();
+
+            return true;
         }
+
+        return false;
     }
 
     private void showProgress(final boolean show) {

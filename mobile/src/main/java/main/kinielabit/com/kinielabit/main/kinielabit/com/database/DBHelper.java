@@ -12,12 +12,12 @@ import main.kinielabit.com.kinielabit.main.kinielabit.com.database.tables.Usuari
 public class DBHelper extends SQLiteOpenHelper{
 
     private static final String DATABASE_NAME = "kinielabit";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     private final String CREATE_USUARIOS =
             "create table " + Usuario.TAB_NAME +
             "(" + Usuario._ID_USUARIO + " integer primary key,"+ Usuario.USERNAME + " TEXT,"+
-            Usuario.USERNAME + " TEXT, "+Usuario.ID_USUARIO+" INTEGER)";
+            Usuario.CELULAR + " TEXT, "+Usuario.ID_USUARIO+" INTEGER)";
 
     public DBHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -33,6 +33,8 @@ public class DBHelper extends SQLiteOpenHelper{
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+        db.execSQL("DROP TABLE IF EXISTS " + Usuario.TAB_NAME);
+        createTables(db);
     }
 
     private void createTables(SQLiteDatabase db){
